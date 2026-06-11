@@ -1,0 +1,21 @@
+# IDE
+.vscode/
+.idea/
+.trae/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Database (auto-generated)
+*.sqlite
+
+# User data
+hotel_demo_data/
+
+# Build artifacts
+*.zip
