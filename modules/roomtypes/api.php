@@ -10,7 +10,7 @@ try {
             $stmt = $pdo->query("
                 SELECT rt.*,
                     COUNT(r.id) as total_rooms,
-                    SUM(CASE WHEN r.status = 'available' THEN 1 ELSE 0 END) as available_count
+                    COALESCE(SUM(CASE WHEN r.status = 'available' THEN 1 ELSE 0 END), 0) as available_count
                 FROM room_types rt
                 LEFT JOIN rooms r ON r.room_type_id = rt.id
                 GROUP BY rt.id

@@ -14,6 +14,7 @@ try {
     switch ($action) {
         case 'toggle_status':
             $id = (int)($_POST['id'] ?? 0);
+            if ($id <= 0) { echo json_encode(['success' => false, 'message' => 'Invalid ID']); exit(); }
             if ($id == $_SESSION['user_id']) {
                 echo json_encode(['success' => false, 'error' => 'Cannot toggle own status']);
                 exit();
@@ -21,6 +22,7 @@ try {
             $stmt = $pdo->prepare("SELECT status FROM staff WHERE id = ?");
             $stmt->execute([$id]);
             $current = $stmt->fetchColumn();
+            if ($current === false) { echo json_encode(['success' => false, 'message' => 'Staff not found']); exit(); }
             $newStatus = $current === 'active' ? 'inactive' : 'active';
             $pdo->prepare("UPDATE staff SET status = ? WHERE id = ?")->execute([$newStatus, $id]);
             logActivity($pdo, $_SESSION['user_id'], 'toggle_status', 'staff', "Toggled status for staff ID $id to $newStatus");
@@ -29,6 +31,7 @@ try {
 
         case 'delete':
             $id = (int)($_POST['id'] ?? 0);
+            if ($id <= 0) { echo json_encode(['success' => false, 'message' => 'Invalid ID']); exit(); }
             if ($id == $_SESSION['user_id']) {
                 echo json_encode(['success' => false, 'error' => 'Cannot delete yourself']);
                 exit();

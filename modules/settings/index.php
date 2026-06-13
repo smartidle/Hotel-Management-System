@@ -6,7 +6,7 @@ $active_page = 'settings';
 // Only admin can access
 if ($_SESSION['role_id'] != ROLE_ADMIN) {
     setFlash('error', t('access_denied'));
-    redirect('/dashboard.php');
+    redirect(getBaseUrl() . '/dashboard.php');
 }
 
 $baseUrl = getBaseUrl();
