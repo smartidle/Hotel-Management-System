@@ -28,7 +28,10 @@ function redirect($url) {
  * Set flash message in session
  */
 function setFlash($type, $message) {
-    if (!isset($_SESSION)) session_start();
+    if (!isset($_SESSION)) {
+        require_once __DIR__ . '/session_init.php';
+        session_start();
+    }
     $_SESSION['flash_message'] = [
         'type' => $type,
         'message' => $message
@@ -77,7 +80,6 @@ function t($key) {
  * Generate unique code with prefix (e.g., RES-00001)
  */
 function generateCode($prefix, $pdo, $table, $column) {
-    $stmt = $pdo->query("SELECT MAX(CAST(SUBSTRING($column, " . (strlen($prefix) + 2) . ") AS UNSIGNED) AS max_code FROM $table WHERE $column LIKE ?");
     $like = $prefix . '-%';
     $stmt = $pdo->prepare("SELECT $column FROM $table WHERE $column LIKE ? ORDER BY id DESC LIMIT 1");
     $stmt->execute([$like]);

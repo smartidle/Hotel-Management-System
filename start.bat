@@ -24,11 +24,15 @@ if errorlevel 1 (
     echo Possible fixes:
     echo   1. Install PHP 8.2+ to C:\php\
     echo   2. Or edit this file and set PHP_EXE to your PHP path
+    echo   3. Download from: https://windows.php.net/download/
     echo.
     pause
     exit /b 1
 )
 echo [OK] PHP found.
+
+REM Ensure session directory exists
+if not exist "%TEMP%\php_sessions" mkdir "%TEMP%\php_sessions"
 
 REM Check if database exists
 if not exist "%USERPROFILE%\hotel_demo_data\hotel_management.sqlite" (

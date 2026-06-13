@@ -2,6 +2,7 @@
 /**
  * Login Page
  */
+require_once __DIR__ . '/includes/session_init.php';
 session_start();
 
 // If already logged in, redirect to dashboard

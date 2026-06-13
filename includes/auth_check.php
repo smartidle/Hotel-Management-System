@@ -3,6 +3,7 @@
  * Authentication Check
  * Include this at the top of every protected page
  */
+require_once __DIR__ . '/session_init.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {

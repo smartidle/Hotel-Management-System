@@ -43,7 +43,7 @@ try {
 
             // Average room rate
             $stmt = $pdo->prepare("
-                SELECT COALESCE(AVG(r.total_amount * 1.0 / (julianday(r.check_out_date) - julianday(r.check_in_date))), 0) as avg_rate
+                SELECT COALESCE(AVG(CASE WHEN julianday(r.check_out_date) > julianday(r.check_in_date) THEN r.total_amount * 1.0 / (julianday(r.check_out_date) - julianday(r.check_in_date)) ELSE 0 END), 0) as avg_rate
                 FROM reservations r
                 WHERE r.status NOT IN ('cancelled', 'no_show')
                 AND r.check_in_date >= ? AND r.check_in_date <= ?
@@ -169,7 +169,7 @@ try {
             $totalRooms = $pdo->query("SELECT COUNT(*) as cnt FROM rooms")->fetch()['cnt'];
             foreach ($data as &$row) {
                 $row['occupancy_pct'] = $totalRooms > 0
-                    ? round(($row['total_reservations'] / max($row['total_reservations'], 1)) * 100 / 30 * $row['avg_stay'], 1)
+                    ? round($row['total_reservations'] * $row['avg_stay'] / max($totalRooms * 30, 1) * 100, 1)
                     : 0;
                 $row['total_revenue'] = (float)$row['total_revenue'];
                 $row['total_reservations'] = (int)$row['total_reservations'];
